@@ -40,10 +40,10 @@
         public Guid AddInId => Guid.Empty;
 
         /// <inheritdoc/>
-        public string LName => "Объединить размеры";
+        public string LName => "Разбить размеры";
 
         /// <inheritdoc/>
-        public string Description => "Создание новой размерной цепочки из выбранных размеров, лежащих на одной прямой";
+        public string Description => "Создание новых размеров из сегментов выбранной размерной цепочки";
 
         /// <inheritdoc/>
         public string Author => "Пекшев Александр aka Modis";
