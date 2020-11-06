@@ -61,6 +61,8 @@
 
                                 for (var i = 0; i < dimension.NumberOfSegments; i++)
                                 {
+                                    var segment = dimension.Segments.get_Item(i);
+
                                     var referenceLeft = dimension.References.get_Item(i);
                                     {
                                         if (referenceLeft.ElementId != ElementId.InvalidElementId &&
@@ -79,7 +81,17 @@
                                     refArray.Append(referenceLeft);
                                     refArray.Append(referenceRight);
 
-                                    doc.Create.NewDimension(dimension.View, line, refArray, dimension.DimensionType);
+                                    var createdDimension = doc.Create.NewDimension(
+                                        dimension.View, line, refArray, dimension.DimensionType);
+                                    
+                                    if (createdDimension != null)
+                                    {
+                                        createdDimension.Prefix = segment.Prefix;
+                                        createdDimension.Suffix = segment.Suffix;
+                                        createdDimension.Above = segment.Above;
+                                        createdDimension.Below = segment.Below;
+                                        createdDimension.TextPosition = segment.TextPosition;
+                                    }
                                 }
 
                                 doc.Delete(dimension.Id);
