@@ -67,14 +67,20 @@
                                     {
                                         if (referenceLeft.ElementId != ElementId.InvalidElementId &&
                                             doc.GetElement(referenceLeft.ElementId) is Grid grid)
-                                            referenceLeft = GetReferenceFromGrid(grid);
+                                            referenceLeft = new Reference(grid);
+                                        if (referenceLeft.ElementId != ElementId.InvalidElementId &&
+                                            doc.GetElement(referenceLeft.ElementId) is Level level)
+                                            referenceLeft = new Reference(level);
                                     }
                                     
                                     var referenceRight = dimension.References.get_Item(i + 1);
                                     {
                                         if (referenceRight.ElementId != ElementId.InvalidElementId &&
                                             doc.GetElement(referenceRight.ElementId) is Grid grid)
-                                            referenceRight = GetReferenceFromGrid(grid);
+                                            referenceRight = new Reference(grid);
+                                        if (referenceRight.ElementId != ElementId.InvalidElementId &&
+                                            doc.GetElement(referenceRight.ElementId) is Level level)
+                                            referenceRight = new Reference(level);
                                     }
 
                                     var refArray = new ReferenceArray();
@@ -112,53 +118,6 @@
             {
                 // ignore
             }
-        }
-
-        private static Reference GetReferenceFromGrid(Grid grid)
-        {
-            var optionsAllGeometry = new Options
-            {
-                ComputeReferences = true,
-                View = grid.Document.ActiveView,
-                IncludeNonVisibleObjects = true
-            };
-            var wasException = false;
-            try
-            {
-                var geometry = grid.get_Geometry(optionsAllGeometry).GetTransformed(Transform.Identity);
-                if (geometry != null)
-                {
-                    foreach (var geometryObject in geometry)
-                    {
-                        if (geometryObject is Line line && line.Reference != null)
-                        {
-                            return line.Reference;
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                wasException = true;
-            }
-
-            if (wasException)
-            {
-                try
-                {
-                    var gridLine = grid.Curve as Line;
-                    if (gridLine != null && gridLine.Reference != null)
-                    {
-                        return gridLine.Reference;
-                    }
-                }
-                catch (Exception exception)
-                {
-                    ExceptionBox.Show(exception);
-                }
-            }
-
-            return null;
         }
     }
 }
